@@ -1,0 +1,544 @@
+/*
+ * Copyright (c) 2020 The ZMK Contributors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+
+#include <behaviors.dtsi>
+#include <behaviors/studio_unlock.dtsi>
+#include <behaviors/mouse_keys.dtsi>
+#include <behaviors/mouse_key_press.dtsi>
+#include <behaviors/mouse_key_toggle.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/mouse.h>
+#include <dt-bindings/zmk/input_transform.h>
+
+#include <behaviors/insomnia.dtsi>
+#include <dt-bindings/zmk/insomnia.h>
+#include <input/processors.dtsi>
+
+#define default_layer 0
+#define layer1 1
+#define layer2 2
+//#define LHB 3
+//#define NUM 4
+//#define MSK 5
+//#define MSC 6
+
+#ifndef MOVE_Y
+#define MOVE_Y(n) (0)
+#endif
+#ifndef MOVE_X
+#define MOVE_X(n) (0)
+#endif
+
+#define U_MOUSE_MOVE_MAX 1700
+#define MOU_U MOVE_Y(-U_MOUSE_MOVE_MAX)
+#define MOU_D MOVE_Y(U_MOUSE_MOVE_MAX)
+#define MOU_L MOVE_X(-U_MOUSE_MOVE_MAX)
+#define MOU_R MOVE_X(U_MOUSE_MOVE_MAX)
+
+#define U_MOUSE_SCROLL_MAX 10
+#define SCL_U MOVE_Y(U_MOUSE_SCROLL_MAX)
+#define SCL_D MOVE_Y(-U_MOUSE_SCROLL_MAX)
+#define SCL_L MOVE_X(-U_MOUSE_SCROLL_MAX)
+#define SCL_R MOVE_X(U_MOUSE_SCROLL_MAX)
+
+/ {
+        xy_transf: xy_transf {
+                compatible = "zmk,input-processor-transform";
+                #input-processor-cells = <1>;
+                type = <INPUT_EV_REL>;
+                x-codes = <INPUT_REL_X>, <INPUT_REL_WHEEL>;
+                y-codes = <INPUT_REL_Y>, <INPUT_REL_HWHEEL>;
+        };
+        xy_scaler: xy_scaler {
+                compatible = "zmk,input-processor-scaler";
+                #input-processor-cells = <2>;
+                type = <INPUT_EV_REL>;
+                codes = <INPUT_REL_X>, <INPUT_REL_Y>;
+                track-remainders;
+        };
+        x_scaler: x_scaler {
+                compatible = "zmk,input-processor-scaler";
+                #input-processor-cells = <2>;
+                type = <INPUT_EV_REL>;
+                codes = <INPUT_REL_X>;
+        };
+        to_wheel: to_wheel {
+                compatible = "zmk,input-processor-code-mapper";
+                #input-processor-cells = <0>;
+                type = <INPUT_EV_REL>;
+                map = <INPUT_REL_X INPUT_REL_HWHEEL>
+                    , <INPUT_REL_Y INPUT_REL_WHEEL>;
+        };
+
+        // tball0_mmv_il {
+        //         compatible = "zmk,input-listener";
+        //         device = <&tball0>;
+        //         precise {
+        //                 layers = <NUM>;
+        //                 input-processors = <&xy_scaler 2 3>;
+        //         };
+        //         scroll {
+        //                 layers = <MSC>;
+        //                 input-processors = <&xy_transf (INPUT_TRANSFORM_Y_INVERT)>
+        //                                 , <&xy_scaler 1 25>, <&x_scaler 0 1>
+        //                                 , <&to_wheel>;
+        //         };
+        // };
+
+        // tball1_mmv_il {
+        //         compatible = "zmk,input-listener";
+        //         device = <&tball1>;
+        //         precise {
+        //                 layers = <NUM>;
+        //                 input-processors = <&xy_scaler 2 3>;
+        //         };
+        //         scroll {
+        //                 layers = <MSC>;
+        //                 input-processors = <&xy_transf (INPUT_TRANSFORM_Y_INVERT)>
+        //                                 , <&xy_scaler 1 25>, <&x_scaler 0 1>
+        //                                 , <&to_wheel>;
+        //         };
+        // };
+
+        // tpoint0_mmv_il {
+        //         compatible = "zmk,input-listener";
+        //         device = <&tpoint0>;
+        //         input-processors = <&xy_transf (INPUT_TRANSFORM_Y_INVERT)>;
+        //         precise {
+        //                 layers = <NUM>;
+        //                 inherit;
+        //                 input-processors = <&xy_scaler 2 3>;
+        //         };
+        //         scroll {
+        //                 layers = <MSC>;
+        //                 inherit;
+        //                 input-processors = <&xy_scaler 1 22>, <&x_scaler 0 1>
+        //                                  , <&to_wheel>;
+        //         };
+        // };
+
+        tpad0_mmv_il {
+                compatible = "zmk,input-listener";
+                device = <&tpad0>;
+                input-processors = <&xy_transf (INPUT_TRANSFORM_Y_INVERT)>;
+                precise {
+                        layers = <default_layer>;
+                        inherit;
+                        input-processors = <&xy_scaler 2 3>;
+                };
+                // scroll {
+                //         layers = <MSC>;
+                //         inherit;
+                //         input-processors = <&xy_scaler 1 22>, <&x_scaler 0 1>
+                //                          , <&to_wheel>;
+                // };
+        };
+
+
+        behaviors {
+                m_v: mouse_move {
+                        compatible = "zmk,behavior-input-two-axis";
+                        #binding-cells = <1>;
+                        trigger-period-ms = <12>; // slow down for OTA, default is 3ms
+                        x-input-code = <INPUT_REL_X>;
+                        y-input-code = <INPUT_REL_Y>;
+                        time-to-max-speed-ms = <300>;
+                        acceleration-exponent = <1>;
+                };
+                m_s: mouse_scroll {
+                        compatible = "zmk,behavior-input-two-axis";
+                        #binding-cells = <1>;
+                        trigger-period-ms = <12>; // slow down for OTA, default is 3ms
+                        x-input-code = <INPUT_REL_HWHEEL>;
+                        y-input-code = <INPUT_REL_WHEEL>;
+                        time-to-max-speed-ms = <50>;
+                        acceleration-exponent = <1>;
+                };
+                ec_s: mouse_scroll {
+                        compatible = "zmk,behavior-input-two-axis";
+                        #binding-cells = <1>;
+                        trigger-period-ms = <12>; // slow down for OTA, default is 3ms
+                        x-input-code = <INPUT_REL_HWHEEL>;
+                        y-input-code = <INPUT_REL_WHEEL>;
+                        time-to-max-speed-ms = <277>;
+                        acceleration-exponent = <0>;
+                };
+                rot_enc: sensor_rotate {
+                        compatible = "zmk,behavior-sensor-rotate";
+                        #sensor-binding-cells = <0>;
+                        bindings = <&ec_s MOVE_Y(-17)>, <&ec_s MOVE_Y(17)>;
+                        tap-ms = <65>;
+                };
+        };
+
+        mmv_input_listener {
+                compatible = "zmk,input-listener";
+                device = <&m_v>;
+        };
+        mms_input_listener {
+                compatible = "zmk,input-listener";
+                device = <&m_s>;
+        };
+
+        // ib_tog_layer: ib_tog_layer {
+        //         compatible = "zmk,input-behavior-tog-layer";
+        //         #binding-cells = <1>;
+        //         time-to-live-ms = <1000>;
+        // };
+
+        // ib_fwd_to_hid_io: ib_forward_fwd_to_hid_io {
+        //         compatible = "zmk,input-behavior-fwd-to-hid-io";
+        //         #binding-cells = <0>;
+        // };
+
+        //   0   1   2   3   4     5   6   7   8   9
+        //  10  11  12  13  14    15  16  17  18  19
+        //  20  21  22  23  24    25  26  27  28  29
+        //          30  31  32    33  34  35
+        //  36 37 38
+        // combos {
+        //         compatible = "zmk,combos";
+
+        //         q   { timeout-ms = <60>; key-positions = <1 2>; bindings = <&kp Q>; layers = <DEF TSP LHB>; };
+        //         t   { timeout-ms = <60>; key-positions = <2 3>; bindings = <&kp T>; layers = <DEF TSP LHB>; };
+        //         g   { timeout-ms = <60>; key-positions = <12 13>; bindings = <&kp G>; layers = <DEF TSP LHB>; };
+        //         b   { timeout-ms = <60>; key-positions = <22 23>; bindings = <&kp B>; layers = <DEF TSP LHB>; };
+        //         b_d { timeout-ms = <70>; key-positions = <2 13>; bindings = <&kp B>; layers = <DEF TSP LHB>; };
+        //         b_v { timeout-ms = <60>; key-positions = <23 13>; bindings = <&kp B>; layers = <DEF TSP LHB>; };
+        //         t_v { timeout-ms = <60>; key-positions = <3 13>; bindings = <&kp T>; layers = <DEF TSP LHB>; };
+
+        //         z   { timeout-ms = <30>; key-positions = <10 31>; bindings = <&kp Z>; layers = <DEF TSP LHB>; };
+        //         x   { timeout-ms = <30>; key-positions = <11 31>; bindings = <&kp X>; layers = <DEF TSP LHB>; };
+        //         c   { timeout-ms = <30>; key-positions = <12 31>; bindings = <&kp C>; layers = <DEF TSP LHB>; };
+        //         v   { timeout-ms = <30>; key-positions = <13 31>; bindings = <&kp V>; layers = <DEF TSP LHB>; };
+        //         b_t { timeout-ms = <30>; key-positions = <13 32>; bindings = <&kp B>; layers = <DEF TSP LHB>; };
+
+        //         p   { timeout-ms = <60>; key-positions = <7 8>; bindings = <&kp P>; layers = <DEF TSP LHB>; };
+        //         y   { timeout-ms = <60>; key-positions = <6 7>; bindings = <&kp Y>; layers = <DEF TSP LHB>; };
+        //         h   { timeout-ms = <60>; key-positions = <16 17>; bindings = <&kp H>; layers = <DEF TSP LHB>; };
+        //         n   { timeout-ms = <60>; key-positions = <26 27>; bindings = <&kp N>; layers = <DEF TSP LHB>; };
+        //         n_d { timeout-ms = <70>; key-positions = <7 16>; bindings = <&kp N>; layers = <DEF TSP LHB>; };
+        //         n_v { timeout-ms = <60>; key-positions = <26 16>; bindings = <&kp N>; layers = <DEF TSP LHB>; };
+        //         y_v { timeout-ms = <60>; key-positions = <6 16>; bindings = <&kp Y>; layers = <DEF TSP LHB>; };
+
+        //         n_t   { timeout-ms = <30>; key-positions = <16 33>; bindings = <&kp N>; layers = <DEF TSP LHB>; };
+        //         m     { timeout-ms = <30>; key-positions = <16 34>; bindings = <&kp M>; layers = <DEF TSP LHB>; };
+        //         comma { timeout-ms = <30>; key-positions = <17 34>; bindings = <&kp COMMA>; layers = <DEF TSP LHB>; };
+        //         dot   { timeout-ms = <30>; key-positions = <18 34>; bindings = <&kp DOT>; layers = <DEF TSP LHB>; };
+        //         flash { timeout-ms = <30>; key-positions = <19 34>; bindings = <&kp FSLH>; layers = <DEF TSP LHB>; };
+
+        //         bksp { timeout-ms = <70>; key-positions = <17 18>; bindings = <&kp BKSP>; layers = <DEF TSP LHB>; };
+        //         del  { timeout-ms = <70>; key-positions = <17 18>; bindings = <&kp DEL>; layers = <NUM TSP>; };
+        //         esc  { timeout-ms = <70>; key-positions = <11 12>; bindings = <&kp ESC>; layers = <DEF TSP LHB NUM>; };
+
+        //         spcr { timeout-ms = <70>; key-positions = <27 28>; bindings = <&kp SPC>; layers = <DEF TSP LHB NUM>; };
+        //         tab  { timeout-ms = <70>; key-positions = <21 22>; bindings = <&kp TAB>; layers = <DEF TSP LHB NUM>; };
+
+        //         ret1  { timeout-ms = <30>; key-positions = <17 26>; bindings = <&kp RET>; layers = <DEF TSP LHB NUM>; };
+        //         ret2  { timeout-ms = <30>; key-positions = <12 23>; bindings = <&kp RET>; layers = <DEF TSP LHB NUM>; };
+
+        //         n1   { timeout-ms = <60>; key-positions = <1 2>; bindings = <&kp N1>; layers = <NUM TSP>; };
+        //         n5   { timeout-ms = <60>; key-positions = <2 3>; bindings = <&kp N5>; layers = <NUM TSP>; };
+        //         n5_v { timeout-ms = <60>; key-positions = <3 13>; bindings = <&kp N5>; layers = <NUM TSP>; };
+                
+        //         n0   { timeout-ms = <60>; key-positions = <7 8>; bindings = <&kp N0>; layers = <NUM TSP>; };
+        //         n6   { timeout-ms = <60>; key-positions = <6 7>; bindings = <&kp N6>; layers = <NUM TSP>; };
+        //         n6_v { timeout-ms = <60>; key-positions = <6 16>; bindings = <&kp N6>; layers = <NUM TSP>; };
+
+        //         f1   { timeout-ms = <60>; key-positions = <1 2>; bindings = <&kp F1>; layers = <MSK>; };
+        //         f5   { timeout-ms = <60>; key-positions = <2 3>; bindings = <&kp F5>; layers = <MSK>; };
+        //         f5_v { timeout-ms = <60>; key-positions = <3 13>; bindings = <&kp F5>; layers = <MSK>; };
+
+        //         f10  { timeout-ms = <60>; key-positions = <7 8>; bindings = <&kp F10>; layers = <MSK>; };
+        //         f6   { timeout-ms = <60>; key-positions = <6 7>; bindings = <&kp F6>; layers = <MSK>; };
+        //         f6_v { timeout-ms = <60>; key-positions = <6 16>; bindings = <&kp F6>; layers = <MSK>; };
+
+        //         f11  { timeout-ms = <70>; key-positions = <6 7 8>; bindings = <&kp F11>; layers = <MSK>; };
+        //         f12  { timeout-ms = <70>; key-positions = <1 2 3>; bindings = <&kp F12>; layers = <MSK>; };
+
+        //         mkp_swap { timeout-ms = <60>; key-positions = <36 38>; bindings = <&tog LHB>; layers = <DEF TSP LHB NUM MSK MSC>; };
+
+        //         nav_left { timeout-ms = <60>; key-positions = <16 17>; bindings = <&kp LEFT>; layers = <NUM TSP>; };
+        //         mmv_left { timeout-ms = <60>; key-positions = <16 17>; bindings = <&mmv MOU_L>; layers = <MSK>; };
+        //         msc_left { timeout-ms = <60>; key-positions = <16 17>; bindings = <&msc SCL_L>; layers = <MSC>; };
+
+        //         dfu_l { timeout-ms = <60>; key-positions = <0 1>; bindings = <&bootloader>; layers = <MSC>; };
+        // };
+
+        // behaviors {
+        //         hm_l: homerow_mods_left {
+        //                 compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>;
+        //                 tapping-term-ms = <200>; quick-tap-ms = <200>;
+        //                 flavor = "tap-preferred"; bindings = <&kp>, <&kp>;
+        //         };
+        //         hm_r: homerow_mods_right {
+        //                 compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>;
+        //                 tapping-term-ms = <200>; quick-tap-ms = <200>;
+        //                 flavor = "tap-preferred"; bindings = <&kp>, <&kp>;
+        //         };
+        //         hl_l: homerow_layers_left {
+        //                 compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>;
+        //                 tapping-term-ms = <200>; quick-tap-ms = <200>;
+        //                 flavor = "tap-preferred"; bindings = <&mo>, <&kp>;
+        //         };
+        //         hl_r: homerow_layers_right {
+        //                 compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>;
+        //                 tapping-term-ms = <200>; quick-tap-ms = <200>;
+        //                 flavor = "tap-preferred"; bindings = <&mo>, <&kp>;
+        //         };
+        //         hmkp_tg: hold_mouse_key_press_tap_toggle {
+        //                 compatible = "zmk,behavior-hold-tap"; #binding-cells = <2>;
+        //                 tapping-term-ms = <200>; quick-tap-ms = <200>;
+        //                 flavor = "tap-preferred"; bindings = <&mkp>, <&tog>;
+        //         };
+        //         // rot_enc: sensor_rotate {
+        //         //         compatible = "zmk,behavior-sensor-rotate";
+        //         //         #sensor-binding-cells = <0>;
+        //         //         bindings = <&msc SCL_D>, <&msc SCL_U>;
+        //         //         tap-ms = <120>;
+        //         // };
+        // };
+
+        // kpad: key_kip_a_d {
+        //         compatible = "zmk,behavior-key-press-lip";
+        //         #binding-cells = <1>;
+        //         keycodes = <A D>;
+        // };
+        // kpws: key_kip_w_s {
+        //         compatible = "zmk,behavior-key-press-lip";
+        //         #binding-cells = <1>;
+        //         keycodes = <W S>;
+        // };
+
+        // tempo: key_tempo {
+        //         compatible = "zmk,behavior-key-tempo";
+        //         #binding-cells = <0>;
+        //         usage-pages = <HID_USAGE_KEY HID_USAGE_CONSUMER>;
+        // };
+
+//         keymap {
+//                 compatible = "zmk,keymap";
+//                 DEF_layer {
+// // +------------------------------------------------------+     +--------------------------------------------------------+
+// // |     Q    |  LCTRL:W |  _MSK:E  |  LALT:R  |     T    |     |     Y     |  RALT:U  |  _MSK:I   |  RCTRL:O |     P    |
+// // |     A    |  _NUM:S  |  _NUM:D  |  LGUI:F  |     G    |     |     H     |  RGUI:J  |  _NUM:K   |  _NUM:L  |     ;:   |
+// // |  SHFT Z  |  LGUI:X  |     C    |     V    |     B    |     |     N     |     M    |    ,<     |  LGUI:.> |  SHFT /? |
+// //                       | ^MSK:ESC |  GUI:ESC | CTRL:TAB |     |  ALT:ENT  | _NUM:SPC | ^MSK:BKSP |
+//                         display-name = "Default";
+//                         bindings = <
+//    &kp Q          &hm_l LCTRL W   &hl_l MSK E    &hm_l LALT R    &kp T               &kp Y           &hm_r RALT U     &hl_r MSK I     &hm_r RCTRL O   &kp P
+//    &kp A          &hl_l NUM S     &hl_l NUM D    &hl_l TSP F     &kp G               &kp H           &hl_r TSP J      &hl_r NUM K     &hl_r NUM L     &kp SEMI
+//    &mt LSHFT Z    &hm_l LGUI X    &kp C          &kp V           &kp B               &kp N           &kp M            &kp COMMA       &hm_r LGUI DOT  &mt RSHFT FSLH
+//                                   &lt MSK ESC    &mt LGUI ESC    &mt LCTRL TAB       &mt LALT RET    &lt NUM SPACE    &lt MSK BKSP
+//    &mkp RCLK   &hmkp_tg MCLK MSC   &mkp LCLK
+//                         >;
+//                         // sensor-bindings = <&rot_enc>;
+//                 };
+//                 TSP_layer {
+//                         display-name = "Thumb Swap";
+//                         bindings = <
+//    &kp N0  &kp N9  &kp N8         &trans          &trans          &trans          &trans         &kp N3  &kp N2  &kp N1
+//    &trans  &kp N7  &kp N6         &trans          &trans          &trans          &trans         &kp N4  &kp N5  &trans
+//    &trans  &trans  &trans         &trans          &trans          &trans          &trans         &trans  &trans  &trans
+//                    &lt MSK BKSP   &lt NUM SPACE   &mt LALT RET    &mt LCTRL TAB   &mt LGUI ESC   &lt MSK ESC
+//    &trans   &trans   &trans
+//                         >;
+//                         // sensor-bindings = <&rot_enc>;
+//                 };
+//                 GME_layer {
+// // +------------------------------------------------------+     +--------------------------------------------------------+
+// // |     Q    |     W    |     E    |     R    |     T    |     |     Y     |     U    |     I     |     O    |     P    |
+// // |     A    |     S    |     D    |     F    |     G    |     |     H     |     J    |     K     |     L    |     ;:   |
+// // |  SHFT Z  |     X    |     C    |     V    |     B    |     |     N     |     M    |    ,<     |    .>    |  SHFT /? |
+// //                       | ^MSK:ESC |  GUI:ESC | CTRL:TAB |     |  ALT:ENT  | _NUM:SPC | ^MSK:BKSP |
+//                         display-name = "Gaming";
+//                         bindings = <
+//    &kp Q          &kpws W         &kp E          &kp R           &kp T               &kp Y           &kp U            &kp I           &kp O           &kp P
+//    &kpad A        &kpws S         &kpad D        &kp F           &kp G               &kp H           &kp J            &kp K           &kp L           &kp SEMI
+//    &mt LSHFT Z    &kp X           &kp C          &kp V           &kp B               &kp N           &kp M            &kp COMMA       &kp DOT         &mt RSHFT FSLH
+//                                   &lt MSK ESC    &mt LGUI ESC    &mt LCTRL TAB       &mt LALT RET    &lt NUM SPACE    &lt MSK BKSP
+//    &mkp RCLK   &hmkp_tg MCLK MSC   &mkp LCLK
+//                         >;
+//                         // sensor-bindings = <&rot_enc>;
+//                 };
+//                 LHB_layer {
+//                         display-name = "MKP Swap";
+//                         bindings = <
+//    &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
+//    &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
+//    &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans
+//                    &trans  &trans  &trans    &trans  &trans  &trans
+//    &mkp LCLK   &hmkp_tg MCLK MSC   &mkp RCLK
+//                         >;
+//                         // sensor-bindings = <&rot_enc>;
+//                 };
+//                 NUM_layer {
+// // +------------------------------------------------------+     +-------------------------------------------------------+
+// // |    1!    | LCTRL:2@  |    3#    | LALT:4$  |    5%   |     |    6^    |  RALT:7& |    8&    |  RCTRL 9( |    0)    |
+// // |    `~    |           |    {[    |    ]}    |   TAB   |     |    LFT   |   DWN    |    UP    |    RGT    |    '"    |
+// // | SHFT TAB |           |          |          |   RET   |     |   BKSP   |    -_    |    =+    |    SPC    |  SHFT \| |
+// //                        |          |          |         |     |          |    (H)   |          |
+//                         display-name = "Num";
+//                         bindings = <
+//    &kp N1             &hm_l LCTRL N2   &kp N3     &hm_l LALT N4   &kp N5              &kp N6      &hm_r RALT N7   &kp N8      &hm_r RCTRL N9   &kp N0
+//    &kp GRAVE          &trans           &kp LBKT   &kp RBKT        &kp TAB             &kp LEFT    &kp DOWN        &kp UP      &kp RIGHT        &kp SQT
+//    &mt LSHFT TAB      &trans           &trans     &trans          &kp RET             &kp BKSP    &kp MINUS       &kp EQUAL   &kp SPACE        &mt RSHFT BSLH
+//                                        &trans     &trans          &trans              &trans      &trans          &trans
+//    &trans   &trans   &trans
+//                         >;
+//                 };
+//                 MSK_layer {
+// // +------------------------------------------------------+     +------------------------------------------------------+
+// // |    F1    |    F2    |  (H) F3  |  _MSC:F4 |    F5    |     |    F6    |  _MSC:F7 |  (H) F8  |    F9    |   F10    |
+// // |   VOLD   |   VOLU   |   BRID   |   BRIU   |   F12    |     |   MLFT   |   MDWN   |    MUP   |   MRGT   |   F11    |
+// // |   _MSC   |   RCLK   |   MCLK   |   LCLK   |          |     |          |   LCLK   |   MCLK   |   RCLK   |  _MSC    |
+// //                       |   (H)    |          |          |     |          |          |    (H)   |
+//                         display-name = "Mou Key";
+//                         bindings = <
+//    &kp F1        &kp F2        &kp F3        &lt MSC F4    &kp F5            &kp F6      &lt MSC F7  &kp F8      &kp F9      &kp F1
+//    &kp C_VOL_DN  &kp C_VOL_UP  &kp C_BRI_DN  &kp C_BRI_UP  &kp F12           &mmv MOU_L  &mmv MOU_D  &mmv MOU_U  &mmv MOU_R  &kp F11
+//    &mo MSC       &mkp RCLK     &mkp MCLK     &mkp LCLK     &trans            &trans      &mkp LCLK   &mkp MCLK   &mkp RCLK   &mo MSC
+//                                &trans        &trans        &trans            &trans      &trans      &trans
+//    &trans   &trans   &trans
+//                         >;
+//                 };
+//                 MSC_layer {
+// // +------------------------------------------------------+     +------------------------------------------------------+
+// // |   TEMPO  |   BT_0   | (H) BT_1 | (H) BT_C |          |     |          |    (H)   |    (H)   |          |    DFU   |
+// // |   RESET  |  ISA_ON  |  ISA_OFF |  ISA_SLP |          |     |   SLFT   |   SDWN   |    SUP   |   SRGT   |   RESET  |
+// // |    (H)   |   RCLK   |   MCLK   |   LCLK   |          |     |          |   LCLK   |   MCLK   |   RCLK   |    (H)   |
+// //                       |   (H)    |          |          |     |          |          |    (H)   |
+//                         display-name = "Mou Scroll";
+//                         bindings = <
+//    &tempo      &bt BT_SEL 0  &bt BT_SEL 1  &bt BT_CLR    &trans            &trans       &trans        &trans      &tog GME      &bootloader
+//    &sys_reset  &isa ISA_ON   &isa ISA_OFF  &isa ISA_SLP  &studio_unlock    &msc SCL_L   &msc SCL_D    &msc SCL_U  &msc SCL_R    &sys_reset
+//    &trans      &mkp RCLK     &mkp MCLK     &mkp LCLK     &trans            &trans       &mkp LCLK     &mkp MCLK   &mkp RCLK     &trans
+//                              &trans        &trans        &trans            &trans       &trans        &trans
+//    &trans   &trans   &trans
+//                         >;
+//                 };
+//        };
+keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            bindings = <
+                &kp W              &kp B 
+                &kp P     &kp F    &kp M      &kp U     &mo 1
+                &kp R     &kp S    &kp N      &kp I     &mo 2    &kp TAB     &kp BACKSPACE
+                &kp O     &kp A    &kp T      &kp E     &kp G    &mo 1       &kp SPACE    &kp LCTRL
+                &kp C     &kp D    &kp L      &kp H     &kp Y    &kp LSHIFT  &kp RET      &kp LALT
+            >;
+        };
+        layer1 {
+            bindings = <
+                &kp SEMI           &kp V 
+                &kp SLASH &kp N7   &kp N8     &kp N9    &kp Z
+                &kp SQT   &kp N4   &kp N5     &kp N6    &kp X    &kp C_PLAY_PAUSE    &mkp RCLK
+                &kp MINUS &kp N1   &kp N2     &kp N3    &kp J    &trans      &mkp LCLK    &kp ESC
+                &kp Q     &kp N0   &kp COMMA  &kp DOT   &kp K    &trans      &kp PSCRN    &mkp MCLK
+            >;
+        };
+        layer2 {
+            bindings = <
+                &trans             &trans  
+                &trans    &trans   &trans     &trans    &trans
+                &trans    &trans   &trans     &trans    &trans   &trans     &bt BT_CLR
+                &kp EQUAL &trans   &trans     &trans    &trans   &trans     &trans        &kp DEL
+                &trans    &trans   &trans     &trans    &trans   &trans     &bt BT_NXT    &kp LGUI
+            >;
+        };
+    };
+};
+
+// #define OUTPUT_SOURCE_LAYER_STATE_CHANGE        1
+// #define OUTPUT_SOURCE_POSITION_STATE_CHANGE     2
+// #define OUTPUT_SOURCE_KEYCODE_STATE_CHANGE      3
+// #define OUTPUT_SOURCE_MOUSE_BUTTON_STATE_CHANGE 4
+// #define OUTPUT_SOURCE_MOUSE_WHEEL_STATE_CHANGE  5
+// #define OUTPUT_SOURCE_TRANSPORT                 6
+// /{
+//         // lra0_obl__press_key_code_q {
+//         //         compatible = "zmk,output-behavior-listener";
+//         //         layers = < DEF TSP LHB MSC >;
+//         //         sources = < OUTPUT_SOURCE_KEYCODE_STATE_CHANGE >;
+//         //         position = < 0x14 >;
+//         //         bindings = < &ob_lra0 >;
+//         // };
+//         // ob_lra0: ob_lra0 {
+//         //         compatible = "zmk,output-behavior-generic";
+//         //         #binding-cells = <0>;
+//         //         device = <&fb_lra0>;
+//         //         // delay = <0>;
+//         //         /* DON'T need time-to-live-ms for DRV2605 driver */
+//         //         // time-to-live-ms = <130>;
+//         //         /* force will be convrt to waveformm effect from DRV2605 library */
+//         //         force = <7>;
+//         // };
+//         // led1_obl__press_mouse_btn_1 {
+//         //         compatible = "zmk,output-behavior-listener";
+//         //         layers = < DEF TSP LHB MSC >;
+//         //         /* trigger on mouse button 1 status change */
+//         //         sources = < OUTPUT_SOURCE_MOUSE_BUTTON_STATE_CHANGE >;
+//         //         position = < 1 >;
+//         //         bindings = < &ob_mbtn_led1 >;
+//         //         /* caught all state change that include key press and release */
+//         //         all-state;
+//         // };
+//         // ob_mbtn_led1: ob_mbtn_led1 {
+//         //         compatible = "zmk,output-behavior-generic";
+//         //         #binding-cells = <0>;
+//         //         device = <&fb_led0>;
+//         //         delay = <0>;
+//         //         /* set duty cycle of pwm, max 256 */
+//         //         force = <120>;
+//         //         /* enable momentum to trigger on both on all state change */
+//         //         momentum;
+//         //         momentum-force = <0>;
+//         // };
+//         // led1_obl__press_mouse_whl_1 {
+//         //         compatible = "zmk,output-behavior-listener";
+//         //         layers = < DEF TSP LHB MSC >;
+//         //         /* trigger on mouse wheel status change */
+//         //         sources = < OUTPUT_SOURCE_MOUSE_WHEEL_STATE_CHANGE >;
+//         //         bindings = < &ob_mwhl1_led1 >;
+//         // };
+//         // ob_mwhl1_led1: ob_mwhl1_led1 {
+//         //         compatible = "zmk,output-behavior-generic";
+//         //         #binding-cells = <0>;
+//         //         device = <&fb_led0>;
+//         //         delay = <0>;
+//         //         time-to-live-ms = <25>;
+//         //         /* set duty cycle of pwm, max 256 */
+//         //         force = <80>;
+//         // };
+//         // pwm0_obl__press_key_code_p {
+//         //         compatible = "zmk,output-behavior-listener";
+//         //         layers = < DEF TSP LHB MSC >;
+//         //         sources = < OUTPUT_SOURCE_KEYCODE_STATE_CHANGE >;
+//         //         position = < 0x13>;
+//         //         bindings = < &ob_led0 >;
+//         //         /* caught all state change that include key press and release */
+//         //         all-state;
+//         // };
+//         // ob_led0: ob_led0 {
+//         //         compatible = "zmk,output-behavior-generic";
+//         //         #binding-cells = <0>;
+//         //         device = <&fb_led0>;
+//         //         delay = <0>;
+//         //         /* set duty cycle of pwm, max 256 */
+//         //         force = <180>;
+//         //         /* enable momentum to trigger on both on all state change */
+//         //         momentum;
+//         //         momentum-force = <12>;
+//         // };
+// };

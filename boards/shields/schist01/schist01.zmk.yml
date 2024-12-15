@@ -1,0 +1,12 @@
+file_format: "1"
+id: schist01
+name: schist01
+type: shield
+url: https://github.com/LeverMind/schist01-module
+requires: [pro_micro]
+exposes: []
+features:
+  - keys
+  - pointer
+  - studio
+siblings:
