@@ -5,7 +5,6 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
-#include "schist01_tpad0_cirque.dtsi" 
 #include "schist01-layouts.dtsi"
 &tpad0 { status = "okay"; };
 &spi0 {status = "okay";};
@@ -14,7 +13,7 @@
 	chosen {
         zmk,kscan = &default_kscan;
         zmk,matrix_transform = &default_transform;
-        zmk,physical-layout = &physical_layout_0;
+        zmk,physical-layout = &schist01-layouts;
     };
 
     default_kscan: kscan {
