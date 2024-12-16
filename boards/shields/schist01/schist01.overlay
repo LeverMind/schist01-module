@@ -6,8 +6,6 @@
 
 #include <dt-bindings/zmk/matrix_transform.h>
 #include "schist01-layouts.dtsi"
-&tpad0 { status = "okay"; };
-&spi0 {status = "okay";};
 
 / {
 	chosen {
