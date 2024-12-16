@@ -1,4 +1,5 @@
 #include <dt-bindings/pinctrl/nrf-pinctrl.h>
+#include <dt-bindings/zmk/input_transform.h>
 
 &pinctrl {
 	spi0_default: spi0_default {
@@ -41,3 +42,20 @@
         sensitivity = "2";
 	};
 };
+tpad0_mmv_il {
+                compatible = "zmk,input-listener";
+                device = <&tpad0>;
+                input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>;
+                precise {
+                        layers = <default_layer>;
+                        inherit;
+                        input-processors = <&zip_xy_scaler 2 3>;
+                };
+                scroll {
+                        layers = <layer1>;
+                        inherit;
+                        input-processors = <&xy_scaler 1 22>, <&x_scaler 0 1>
+                                         , <&to_wheel>;
+                };
+                
+        };
