@@ -8,5 +8,5 @@ exposes: []
 features:
   - keys
   - pointer
-  - studio
+  #- studio
 siblings:
