@@ -1,42 +1,17 @@
-#include <dt-bindings/pinctrl/nrf-pinctrl.h>
-
-&pinctrl {
-	spi0_default: spi0_default {
-		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
-							<NRF_PSEL(SPIM_MOSI, 0, 6)>,
-							<NRF_PSEL(SPIM_MISO, 0, 17)>;
-		};
-	};
-	spi0_sleep: spi0_sleep {
-		group1 {
-			psels = <NRF_PSEL(SPIM_SCK, 0, 20)>,
-							<NRF_PSEL(SPIM_MOSI, 0, 6)>,
-							<NRF_PSEL(SPIM_MISO, 0, 17)>;
-			low-power-enable;
-		};
-	};
-};
 
 &spi0 {
     compatible = "nordic,nrf-spim";
-    status = "okay";
     pinctrl-0 = <&spi0_default>;
     pinctrl-1 = <&spi0_sleep>;
     pinctrl-names = "default", "sleep";
+	status = "okay";
 
-};
-
-&spi0 {
     cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
-	compatible = "nordic,nrf-spim";
-	status = "disabled"; // <<< disabled in main .dtsi, okay in .overlay
 	tpad0: glidepoint@0 {
 		compatible = "cirque,pinnacle";
-		status = "okay";
-		label = "TOUCHPAD0";
 		reg = <0>;
 		spi-max-frequency = <4000000>;
+		status = "okay";
         dr-gpios = <&gpio0 8 GPIO_ACTIVE_HIGH>;
         sensitivity = "2";
 	};

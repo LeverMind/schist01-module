@@ -2,7 +2,7 @@ file_format: "1"
 id: schist01
 name: schist01
 type: shield
-url: https://github.com/LeverMind/schist01-module
+url: https://github.com/LeverMind/schist01
 requires: [pro_micro]
 exposes: []
 features:

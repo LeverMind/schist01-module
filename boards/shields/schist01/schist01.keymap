@@ -44,8 +44,7 @@
 #define SCL_R MOVE_X(U_MOUSE_SCROLL_MAX)
 
 / {
-
-        tpad0_mmv_il {
+        tpad0_il {
                 compatible = "zmk,input-listener";
                 device = <&tpad0>;
                 input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>;
@@ -57,7 +56,7 @@
                 scroll {
                         layers = <layer1>;
                         inherit;
-                        input-processors = <&xy_scaler 1 22>, <&x_scaler 0 1>
+                        input-processors = <&zip_xy_scaler 1 22>, <&zip_x_scaler 0 1>
                                          , <&to_wheel>;
                 };
                 
