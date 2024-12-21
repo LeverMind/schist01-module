@@ -1,3 +1,4 @@
+#include <dts/arm/nordic/nrf52840_qiaa.dtsi>
 &pinctrl {
 	spi0_default: spi0_default {
 		group1 {
