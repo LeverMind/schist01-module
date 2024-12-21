@@ -57,7 +57,7 @@
                         layers = <layer1>;
                         inherit;
                         input-processors = <&zip_xy_scaler 1 22>, <&zip_x_scaler 0 1>
-                                         , <&to_wheel>;
+                                         , <&zip_to_wheel>;
                 };
                 
         };
