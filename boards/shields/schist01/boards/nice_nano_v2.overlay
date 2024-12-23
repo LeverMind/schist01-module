@@ -37,7 +37,6 @@
         tpad0_il {
                 compatible = "zmk,input-listener";
                 device = <&tpad0>;
-                input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>;
                 precise {
                         layers = <default_layer>;
                         input-processors = <&zip_xy_scaler 2 3>;
