@@ -4,6 +4,8 @@ manifest:
       url-base: https://github.com/zmkfirmware
     - name: petecirque
       url-base: https://github.com/petejohanson
+    - name: badjeff
+      url-base: https://github.com/badjeff
     # Additional modules containing boards/shields/custom code can be listed here as well
     # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
   projects:
@@ -13,6 +15,18 @@ manifest:
       import: app/west.yml
     - name: cirque-input-module
       remote: petecirque
+      revision: main
+    - name: zmk-behavior-insomnia
+      remote: badjeff
+      revision: main
+    - name: zmk-behavior-key-press-lip
+      remote: badjeff
+      revision: main
+    - name: zmk-behavior-key-tempo
+      remote: badjeff
+      revision: main
+    - name: zmk-behavior-mouse-key-toggle
+      remote: badjeff
       revision: main
   self:
     path: config
