@@ -6,7 +6,7 @@ if SHIELD_SCHIST01
 config ZMK_KEYBOARD_NAME
     default "Schist01"
 
-config ZMK_SPLIT_ROLE_CENTRAL
-    default y
+#config ZMK_SPLIT_ROLE_CENTRAL
+#    default y
 
 endif
