@@ -19,14 +19,5 @@ manifest:
     - name: zmk-behavior-insomnia
       remote: badjeff
       revision: main
-    - name: zmk-behavior-key-press-lip
-      remote: badjeff
-      revision: main
-    - name: zmk-behavior-key-tempo
-      remote: badjeff
-      revision: main
-    - name: zmk-behavior-mouse-key-toggle
-      remote: badjeff
-      revision: main
   self:
     path: config
