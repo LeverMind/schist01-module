@@ -2,8 +2,8 @@ manifest:
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
-    #- name: petejohanson
-    #  url-base: https://github.com/petejohanson
+    - name: petejohanson
+      url-base: https://github.com/petejohanson
     #- name: badjeff
     #  url-base: https://github.com/badjeff
     # Additional modules containing boards/shields/custom code can be listed here as well
@@ -13,9 +13,9 @@ manifest:
       remote: zmkfirmware
       revision: main
       import: app/west.yml
-    #- name: cirque-input-module
-    #  remote: petejohanson
-    #  revision: main
+    - name: cirque-input-module
+      remote: petejohanson
+      revision: main
     #- name: zmk-behavior-insomnia
     #  remote: badjeff
      # revision: main
