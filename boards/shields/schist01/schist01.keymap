@@ -47,9 +47,9 @@
 
 / {
         tpad0_il {
-                compatible = "zmk,input-listener";
-                status = "okay";
+                compatible = "zmk,input-listener"; 
                 device = <&tpad0>;
+                status = "okay";
                 input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>;
                 precise {
                         layers = <default_layer>;
