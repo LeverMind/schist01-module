@@ -32,7 +32,7 @@
     pinctrl-names = "default", "sleep";
 	
 
-    cs-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>;
+    cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
 	tpad0: glidepoint@0 {
 		compatible = "cirque,pinnacle";
 		reg = <0>;
