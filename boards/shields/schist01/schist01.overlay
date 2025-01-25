@@ -33,7 +33,7 @@
     pinctrl-1 = <&spi0_sleep>;
     pinctrl-names = "default", "sleep";
 	
-}
+};
 
 &pro_micro_spi {
     status = "okay";
