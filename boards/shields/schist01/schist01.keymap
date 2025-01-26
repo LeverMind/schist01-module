@@ -68,7 +68,7 @@ keymap {
         compatible = "zmk,keymap";
 
         default_layer {
-            display-name = "Layer0"
+            display-name = "Layer0";
             bindings = <
                 &kp W              &kp B 
                 &kp P     &kp F    &kp M      &kp U     &kp Y
@@ -78,7 +78,7 @@ keymap {
             >;
         };
         layer1 {
-            display-name = "Layer1"
+            display-name = "Layer1";
             bindings = <
                 &kp Q              &kp V 
                 &kp J     &kp N7   &kp N8     &kp N9    &kp Z
@@ -88,7 +88,7 @@ keymap {
             >;
         };
         layer2 {
-            display-name = "Layer2"
+            display-name = "Layer2";
             bindings = <
                 &kp DEL              &trans 
                 &kp SLASH  &kp D     &kp SEMI       &kp C_VOL_UP &kp C_VOL_DN
