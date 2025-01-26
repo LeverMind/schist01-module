@@ -94,7 +94,7 @@ keymap {
                 &kp SLASH  &kp D     &kp SEMI       &kp C_VOL_UP &kp C_VOL_DN
                 &kp MINUS  &kp S     &kp SQT        &kp HOME     &kp END     &trans   &bt BT_CLR
                 &kp EQUAL  &kp GRAVE &kp TAB        &kp LBKT     &kp RBKT    &trans   &trans     &bt BT_NXT
-                &kp LCTRL  &kp LALT  &studio_unlock &kp LGUI     &BSLH       &trans   &trans     &trans
+                &kp LCTRL  &kp LALT  &studio_unlock &kp LGUI     &kp BSLH    &trans   &trans     &trans
             >;
         };
         layer3 {
