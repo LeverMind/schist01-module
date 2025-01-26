@@ -53,7 +53,7 @@ tpad0_listener {
                 precise {
                     layers = <layer1>;
                     input-processors = <&zip_xy_scaler 2 3>;
-                }
+                };
                 
         };
         
