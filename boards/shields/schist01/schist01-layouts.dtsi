@@ -6,7 +6,7 @@
         display-name = "default_transform";
 
         //kscan = <&kscan0>;
-        default_transform = <&matrix_transform0>;
+        transform = <&default_transform>;
 
         keys  //                     w   h    x    y     rot    rx    ry
             = <&key_physical_attrs 100 100    0   75       0     0     0>
