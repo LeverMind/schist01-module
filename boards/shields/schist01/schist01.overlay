@@ -6,8 +6,10 @@
 
 #include <dt-bindings/zmk/matrix_transform.h>
 
-
 //#include "schist01-layouts.dtsi"
+
+/ {
+
 &pro_micro_spi {
     status = "okay";
     cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
@@ -22,7 +24,7 @@
 	};
 };
 
-/ {
+
 
 
 	chosen {
