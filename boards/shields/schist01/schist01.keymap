@@ -48,11 +48,16 @@ tpad0_listener {
                 compatible = "zmk,input-listener"; 
                 device = <&tpad0>;
                 status = "okay";
-                input-processors = <&zip_xy_transform (INPUT_TRANSFORM_XY_SWAP)>,<&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>,<&zip_xy_scaler 3 1>;
+                input-processors = <&zip_xy_transform (INPUT_TRANSFORM_Y_INVERT)>,<&zip_xy_scaler 3 1>;
                 
                 precise {
                     layers = <layer1>;
                     input-processors = <&zip_xy_scaler 1 2>;
+                };
+
+                scroll{
+                    layers = <layer2>;
+                    input-processors = <&zip_xy_to_scroll_mapper>;
                 };
                 
         };
