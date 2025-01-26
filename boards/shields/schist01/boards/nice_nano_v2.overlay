@@ -17,7 +17,7 @@
 		};
 	};
 };
-&spi0 {
+&pro_micro_spi {
     status = "okay";
     compatible = "nordic,nrf-spim";
     pinctrl-0 = <&spi0_default>;
