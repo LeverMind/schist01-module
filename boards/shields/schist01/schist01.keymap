@@ -24,12 +24,12 @@
 #define layer1 1
 #define layer2 2
 
-#ifndef MOVE_Y
-#define MOVE_Y(n) (0)
-#endif
-#ifndef MOVE_X
-#define MOVE_X(n) (0)
-#endif
+//#ifndef MOVE_Y
+//#define MOVE_Y(n) (0)
+//#endif
+//#ifndef MOVE_X
+//#define MOVE_X(n) (0)
+//#endif
 
 //#define U_MOUSE_MOVE_MAX 1700
 //#define MOU_U MOVE_Y(-U_MOUSE_MOVE_MAX)
@@ -44,7 +44,7 @@
 //#define SCL_R MOVE_X(U_MOUSE_SCROLL_MAX)
 
 / {
-tpad0_il {
+tpad0_listener {
                 compatible = "zmk,input-listener"; 
                 device = <&tpad0>;
                 status = "okay";

@@ -18,11 +18,24 @@
 	};
 };
 &spi0 {
-    compatible = "nordic,nrf-spim";
+    status = "okay";
+    //compatible = "nordic,nrf-spim";
     pinctrl-0 = <&spi0_default>;
     pinctrl-1 = <&spi0_sleep>;
     pinctrl-names = "default", "sleep";
-	
+	cs-gpios = <&gpio0 11 GPIO_ACTIVE_LOW>;
+
+    tpad0: glidepoint@0 {
+		compatible = "cirque,pinnacle";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+		status = "okay";
+       dr-gpios = <&gpio0 8 (GPIO_ACTIVE_HIGH)>;
+        sensitivity = "2x";
+        sleep;
+        no-taps;
+	};
+
 };
 
 
