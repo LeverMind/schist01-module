@@ -71,7 +71,7 @@ keymap {
             display-name = "Layer0";
             bindings = <
                 &kp W              &kp B 
-                &kp P     &kp F    &kp M      &kp U     &kp Y
+                &kp P     &kp F    &kp M      &kp U     &mo 2
                 &kp R     &kp S    &kp N      &kp I     &kp G       &kp RET     &kp BACKSPACE
                 &kp O     &kp A    &kp T      &kp E     &mkp LCLK   &mo 1       &kp SPACE    &kp LCTRL
                 &kp C     &kp D    &kp L      &kp H     &mo 1       &kp LSHIFT  &mo 2        &kp LALT
@@ -81,19 +81,19 @@ keymap {
             display-name = "Layer1";
             bindings = <
                 &kp Q              &kp V 
-                &kp J     &kp N7   &kp N8     &kp N9    &kp Z
-                &kp K     &kp N4   &kp N5     &kp N6    &kp X    &kp C_PLAY_PAUSE &trans
-                &mkp MCLK &kp N1   &kp N2     &kp N3    &trans   &trans           &trans    &kp ESC
+                &kp J     &kp N7   &kp N8     &kp N9    &kp Y
+                &kp K     &kp N4   &kp N5     &kp N6    &kp X    &kp C_PLAY_PAUSE &kp DEL
+                &kp Z     &kp N1   &kp N2     &kp N3    &trans   &trans           &trans    &kp ESC
                 &mkp RCLK &kp N0   &kp COMMA  &kp DOT   &trans   &trans           &trans    &trans
             >;
         };
         layer2 {
             display-name = "Layer2";
             bindings = <
-                &kp DEL              &trans 
+                &kp TAB              &kp V 
                 &kp SLASH  &kp D     &kp SEMI       &kp C_VOL_UP &kp C_VOL_DN
                 &kp MINUS  &kp S     &kp SQT        &kp HOME     &kp END     &trans   &bt BT_CLR
-                &kp EQUAL  &kp GRAVE &kp TAB        &kp LBKT     &kp RBKT    &trans   &trans     &bt BT_NXT
+                &kp EQUAL  &kp GRAVE &mkp MCLK      &kp LBKT     &kp RBKT    &trans   &trans     &bt BT_NXT
                 &kp LCTRL  &kp LALT  &studio_unlock &kp LGUI     &kp BSLH    &trans   &trans     &trans
             >;
         };
