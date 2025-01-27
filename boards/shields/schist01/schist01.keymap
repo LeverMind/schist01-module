@@ -79,17 +79,17 @@ keymap {
                 &kp W              &kp B 
                 &kp P     &kp F    &kp M      &kp U     &lt 2 Y
                 &kp R     &kp S    &kp N      &kp I     &kp G   &kp LGUI           &kp BACKSPACE
-                &kp O     &kp A    &kp T      &kp E     &kp C   &lt 1 C_PLAY_PAUSE &kp SPACE    &kp LALT
-                &lt 1 Z   &kp D    &kp L      &kp H     &kp V   &kp LSHIFT         &lt 2 RET    &kp LCTRL
+                &kp O     &kp A    &kp T      &kp E     &kp Z   &lt 1 C_PLAY_PAUSE &kp SPACE    &kp LALT
+                &lt 1 C   &kp D    &kp L      &kp H     &kp V   &kp LSHIFT         &lt 2 RET    &kp LCTRL
             >;
         };
         layer1 {
             display-name = "Layer1";
             bindings = <
-                &kp Q              &mkp MCLK 
-                &kp J     &kp N7   &kp N8     &kp N9    &kp Y
-                &kp K     &kp N4   &kp N5     &kp N6    &kp X      &kp C_VOL_UP  &kp DEL
-                &kp Z     &kp N1   &kp N2     &kp N3    &mkp LCLK  &kp C_VOL_DN  &kp PG_DN    &kp ESC
+                &kp Q              &kp K 
+                &kp J     &kp N7   &kp N8     &kp N9    &mkp MCLK
+                &kp MINUS &kp N4   &kp N5     &kp N6    &kp X      &kp C_VOL_UP  &kp DEL
+                &kp EQUAL &kp N1   &kp N2     &kp N3    &mkp LCLK  &kp C_VOL_DN  &kp PG_DN    &kp ESC
                 &kp LCTRL &kp N0   &kp COMMA  &kp DOT   &mkp RCLK  &kp C_PREV    &kp C_NEXT   &kp PG_UP
             >;
         };
@@ -98,7 +98,7 @@ keymap {
             bindings = <
                 &bootloader          &studio_unlock
                 &kp F1     &kp F2    &kp F3         &kp F4    &kp F5
-                &kp GRAVE  &kp BSLH  &none          &kp HOME  &kp END     &bt BT_CLR &kp UP
+                &kp GRAVE  &kp BSLH  &kp CAPS          &kp HOME  &kp END     &bt BT_CLR &kp UP
                 &kp SLASH  &kp SEMI  &kp SQT        &kp LBKT  &kp RBKT    &kp LEFT   &kp DOWN  &bt BT_NXT
                 &kp LCTRL  &kp LALT  &kp TAB        &kp LGUI  &kp RET     &wf_dup    &snip     &kp RIGHT
             >;
