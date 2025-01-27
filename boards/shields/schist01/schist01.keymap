@@ -25,12 +25,6 @@
 #define layer1 1
 #define layer2 2
 
-// Shortcuts
-//windows snipping tool
-#define SNIP &kp LGUI LSHIFT S 
-//Workflowy Duplicate
-#define WF_DUP &kp LALT LSHIFT D
-
 
 / {
 tpad0_listener {
@@ -51,7 +45,26 @@ tpad0_listener {
                 
         };
         
-        
+        //windows snipping tool
+        ZMK_MACRO(snip,
+            wait-ms = <30>;
+            tap-ms = <40>;
+            bindings
+                = <&macro_press &kp LGUI>
+                , <&macro_press &kp LSHIFT>
+                , <&macro_press &kp S>
+                ;
+        )
+        //workflwy duplicate shortcut
+        ZMK_MACRO(wf_dup,
+            wait-ms = <30>;
+            tap-ms = <40>;
+            bindings
+                = <&macro_press &kp LGUI>
+                , <&macro_press &kp LSHIFT>
+                , <&macro_press &kp S>
+                ;
+        )
 
 keymap {
         compatible = "zmk,keymap";
@@ -80,8 +93,8 @@ keymap {
             display-name = "Layer2";
             bindings = <
                 &kp TAB              &bootloader 
-                &kp SLASH  SNIP      &kp SEMI       &kp C_VOL_UP &kp C_VOL_DN
-                &kp MINUS  WF_DUP    &kp SQT        &kp HOME     &kp END     &bt BT_CLR &kp UP
+                &kp SLASH  &snip     &kp SEMI       &kp C_VOL_UP &kp C_VOL_DN
+                &kp MINUS  &wf_dup   &kp SQT        &kp HOME     &kp END     &bt BT_CLR &kp UP
                 &kp EQUAL  &kp GRAVE &none          &kp LBKT     &kp RBKT    &kp LEFT   &kp DOWN     &bt BT_NXT
                 &kp LCTRL  &kp LALT  &studio_unlock &kp LGUI     &kp BSLH    &trans   &trans     &kp RIGHT
             >;
