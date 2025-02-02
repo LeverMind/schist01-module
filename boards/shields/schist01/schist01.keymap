@@ -98,7 +98,7 @@ keymap {
             bindings = <
                 &bootloader          &studio_unlock
                 &kp F1     &kp F2    &kp F3         &kp F4    &kp F5
-                &kp GRAVE  &kp BSLH  &kp CAPS          &kp HOME  &kp END     &bt BT_CLR &kp UP
+                &kp GRAVE  &kp BSLH  &kp CAPS       &kp HOME  &kp END     &bt BT_CLR &kp UP
                 &kp SLASH  &kp SEMI  &kp SQT        &kp LBKT  &kp RBKT    &kp LEFT   &kp DOWN  &bt BT_NXT
                 &kp LCTRL  &kp LALT  &kp TAB        &kp LGUI  &kp RET     &wf_dup    &snip     &kp RIGHT
             >;
