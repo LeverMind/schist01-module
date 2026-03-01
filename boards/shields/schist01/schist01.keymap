@@ -78,7 +78,7 @@ keymap {
             bindings = <
                 &lt 1 ESC           &kp T 
                 &kp TAB    &kp H    &kp J      &kp K     &lt 2 Y
-                &kp G      &kp Q    &kp W      &kp E     &kp R   &lt 2         &kp N5
+                &kp G      &kp Q    &kp W      &kp E     &kp R   &lt 2 N0        &kp N5
                 &kp LSHIFT &kp A    &kp S      &kp D     &kp F   &lt 1 N6        &kp SPACE    &kp N4
                 &kp LCTRL  &kp Z    &kp X      &kp C     &kp V   &mt LSHIFT N1   &kp N2       &kp N3
             >;
